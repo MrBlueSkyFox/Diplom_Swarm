@@ -1,2 +1,10 @@
 # Project exclude paths
 /venv/
+/.idea/Diplom_Swarm.iml
+/.idea/misc.xml
+/.idea/modules.xml
+/.idea/other.xml
+/.idea/inspectionProfiles/profiles_settings.xml
+/.idea/inspectionProfiles/Project_Default.xml
+/.vscode/settings.json
+/.idea/vcs.xml
