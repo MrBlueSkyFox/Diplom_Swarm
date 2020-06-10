@@ -1,4 +1,5 @@
 from Swarm import Swarm, np, plt
+from operator import itemgetter
 
 
 def NS_data_to_table(data_file_name):
@@ -35,8 +36,7 @@ def train2(table=train_18, max_x=15, pop=300, gen=500):
     swarm_app_strat_2.start()
 
 
-# train()
-# train2()
+
 
 
 def MD(x, T=train_18):
@@ -60,17 +60,26 @@ def ef_check(x, table):
 
 def plot_for_coef(x, table, name):
     predict_cocomo = []
+    write_for_table = []  # вывод значения ef predict, Ef Nasa
     for el in table:
         est_ef = x[0] * el[0] ** x[1]
         predict_cocomo.append([el[0], est_ef])
+        write_for_table.append([el[1], est_ef])
+    with open('write_test_ef.txt', 'a')as f:
+        f.write(' '.join(map(str, write_for_table)) + '\n')
+        f.write('-------\n')
+    # x1_y1 = list(zip(*table))
+    # x2_y2 = list(zip(*predict_cocomo))
     x1_y1 = list(zip(*table))
     x2_y2 = list(zip(*predict_cocomo))
     fig, ax = plt.subplots()
     ax.set_title('a= ' + str(x[0]) + ' b= ' + str(x[1]))
-    ax.scatter(*x1_y1)
-    ax.scatter(*x2_y2)
-    # plt.savefig(name)
-    plt.show()
+    ax.plot(*x1_y1, '--ob', label='NASA data')
+    ax.plot(*x2_y2, '--vr', label='Comp Val')
+    # ax.axis('equal')
+    leg = ax.legend();
+    plt.savefig(name)
+    # plt.show()
     plt.close(fig)
 
 
@@ -82,14 +91,17 @@ def test_many(tabl, full_table, name):
             List_of_coef.append(line.split(','))
     a_b_array = np.array(List_of_coef, dtype=np.float64)
     i = 0
+    s_f = sorted(full_table, key=itemgetter(0))
+    full_table = np.array(s_f)
     for a_b in a_b_array:
         ef_check(a_b, tabl)
         plot_for_coef(a_b, full_table, name + "_" + str(i))
+        i = i + 1
 
 
-# train(train_18, 10, 400, 1000)
-# train2(train_18, 10, 400, 1000)
+train(train_18, 10, 400, 1000)
+train2(train_18, 10, 400, 1000)
 
 # test_many(test_18)
 table18 = np.concatenate((test_18, train_18))
-test_many(test_18, table18, 'Est_Ef_VS_Ef')
+# test_many(test_18, table18, 'Est_Ef_VS_Ef')
