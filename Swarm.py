@@ -1,12 +1,13 @@
 import csv
 import time
 import matplotlib.pyplot as plt
+from math import sqrt
 
 from Particle import Particle, np
 
 
 class Swarm():
-    def __init__(self, min_x, max_x, n, population, table, W=0.6, c1=2, c2=2, generations=100, flag_test=2,
+    def __init__(self, min_x, max_x, n, population, table, W=0.6, c1=2, c2=2, generations=100,
                  flag_choice=1, plt_name='default.txt', out_name='coef.txt'):
         # self.particles = np.full(population, Particle(n, max_x, min_x))
         self.particles = []
@@ -52,27 +53,56 @@ class Swarm():
         # plt.plot(_x, _y)
         title = "MD= " + str(self.best_global_value)
         ax.set_title(title)
-        ax.plot(_x,_y)
+        ax.plot(_x, _y)
         # plt.title = title
         plt.savefig(self.const['plot_name'])
         plt.close(fig)
 
     def fitness(self, list_of_x: np.ndarray):
-        # value = [x ** 2 for x in list_of_x]
-        value = 0.0
-        for i in range(0, len(list_of_x)):
-            value += list_of_x[i] ** 2
-        return value
+        if self.const['strategy'] == 1:
+            return self.fitness_MD(list_of_x)
+        if self.const['strategy'] == 2:
+            return self.fitness_MMRE(list_of_x)
+        if self.const['strategy'] == 3:
+            return self.fitness_RMS(list_of_x)
+        if self.const['strategy'] == 4:
+            return self.fitness_ED(list_of_x)
+
 
     def fitness_MD(self, list_of_x: np.ndarray):
         value = 0.0
         for el in self.T:
-            value += abs(list_of_x[0] * el[0] ** list_of_x[1] - el[1])
+            # value += abs(list_of_x[0] * el[0] ** list_of_x[1] - el[1])
+            value += abs(el[1] - list_of_x[0] * el[0] ** list_of_x[1])
+        return value
+
+    def fitness_MMRE(self, list_of_x: np.ndarray):
+        value = 0.0
+        for el in self.T:
+            # value +=(abs(list_of_x[0]*el[0]**list_of_x[1]))
+            value += (abs(el[1] - list_of_x[0] * el[0] ** list_of_x[1])) / el[1]
+        value = (1 / self.T.shape[0]) * value
+        return value
+
+    def fitness_RMS(self, list_of_x: np.ndarray):
+        value = 0.0
+        for el in self.T:
+            value += (el[1] - list_of_x[0] * el[0] ** list_of_x[1]) ** 2
+
+        value = sqrt((1 / self.T.shape[0]) * value)
+        return value
+
+    def fitness_ED(self, list_of_x: np.ndarray):
+        value = 0.0
+        for el in self.T:
+            value += (el[1] - list_of_x[0] * el[0] ** list_of_x[1]) ** 2
+
+        value = sqrt(value)
         return value
 
     def find_best_particle(self):
         for particle in self.particles:
-            new_boid = self.fitness_MD(particle.positions)
+            new_boid = self.fitness(particle.positions)
             if new_boid < self.best_global_value:
                 self.best_global_value = new_boid
                 self.g_best_global = particle.positions

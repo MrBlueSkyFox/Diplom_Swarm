@@ -16,15 +16,22 @@ def NS_data_to_table(data_file_name):
 
 
 train_18, test_18 = NS_data_to_table("NASA_18.txt")
+train_60, test_60 = NS_data_to_table("NASA_60.txt")
 
 
-def train(table=train_18, max_x=15, pop=300, gen=500):
-    swarm_app_strat_1 = Swarm(min_x=0, max_x=max_x, n=2, population=pop, generations=gen, table=table, flag_test=1,
-                              plt_name='strat_1')
-    swarm_app_strat_2 = Swarm(min_x=0, max_x=max_x, n=2, population=pop, generations=gen, table=table, flag_test=2,
-                              plt_name='strat_2')
-    swarm_app_strat_1.start()
-    swarm_app_strat_2.start()
+def train_18_func(table=train_18, max_x=15, pop=300, gen=500):
+    swarm_app_start_md = Swarm(min_x=0, max_x=max_x, n=2, population=pop, generations=gen, table=table, flag_choice=1,
+                               plt_name='strat_18_md')
+    swarm_app_start_md.start()
+    swarm_app_start_mmre = Swarm(min_x=0, max_x=max_x, n=2, population=pop, generations=gen, table=table, flag_choice=2,
+                                 plt_name='strat_18_mmre')
+    swarm_app_start_mmre.start()
+    swarm_app_start_rms = Swarm(min_x=0, max_x=max_x, n=2, population=pop, generations=gen, table=table, flag_choice=3,
+                                plt_name='strat_18_rms')
+    swarm_app_start_rms.start()
+    swarm_app_start_ed = Swarm(min_x=0, max_x=max_x, n=2, population=pop, generations=gen, table=table, flag_choice=4,
+                               plt_name='strat_18_ed')
+    swarm_app_start_ed.start()
 
 
 def train2(table=train_18, max_x=15, pop=300, gen=500):
@@ -36,7 +43,19 @@ def train2(table=train_18, max_x=15, pop=300, gen=500):
     swarm_app_strat_2.start()
 
 
-
+def train_60_func(table=train_60, max_x=15, pop=300, gen=500):
+    swarm_app_start_md = Swarm(min_x=0, max_x=max_x, n=2, population=pop, generations=gen, table=table, flag_choice=1,
+                               plt_name='strat_60_md')
+    swarm_app_start_md.start()
+    swarm_app_start_mmre = Swarm(min_x=0, max_x=max_x, n=2, population=pop, generations=gen, table=table, flag_choice=2,
+                                 plt_name='strat_60_mmre')
+    swarm_app_start_mmre.start()
+    swarm_app_start_rms = Swarm(min_x=0, max_x=max_x, n=2, population=pop, generations=gen, table=table, flag_choice=3,
+                                plt_name='strat_60_rms')
+    swarm_app_start_rms.start()
+    swarm_app_start_ed = Swarm(min_x=0, max_x=max_x, n=2, population=pop, generations=gen, table=table, flag_choice=4,
+                               plt_name='strat_60_ed')
+    swarm_app_start_ed.start()
 
 
 def MD(x, T=train_18):
@@ -99,8 +118,9 @@ def test_many(tabl, full_table, name):
         i = i + 1
 
 
-train(train_18, 10, 400, 1000)
-train2(train_18, 10, 400, 1000)
+train_18_func(train_18, 10, 400, 1000)
+train_60_func(train_60, 10, 400, 1000)
+# train2(train_18, 10, 400, 1000)
 
 # test_many(test_18)
 table18 = np.concatenate((test_18, train_18))
